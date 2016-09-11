@@ -1,8 +1,18 @@
+GIT
+  remote: git://github.com/paladinsoftware/aws-ses.git
+  revision: 0f4db3ec7ac4e17fdbf9771f73079dbb22d185f5
+  branch: feature/sns-notifications
+  specs:
+    aws-ses (0.6.0)
+      builder
+      mail (> 2.2.5)
+      mime-types
+      xml-simple
+
 PATH
   remote: .
   specs:
-    aws_ses_sns_engine (0.1.0)
-      aws-ses
+    aws-ses-sns-engine (0.1.0)
       fog
       hashie
       rails
@@ -47,11 +57,6 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     arel (6.0.3)
-    aws-ses (0.6.0)
-      builder
-      mail (> 2.2.5)
-      mime-types
-      xml-simple
     builder (3.2.2)
     concurrent-ruby (1.0.2)
     diff-lcs (1.2.5)
@@ -275,7 +280,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws_ses_sns_engine!
+  aws-ses!
+  aws-ses-sns-engine!
   rspec-rails
   sqlite3
 

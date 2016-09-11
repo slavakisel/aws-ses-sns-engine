@@ -1,3 +1,18 @@
 = AwsSesSnsEngine
 
 This project rocks and uses MIT-LICENSE.
+
+WIP - this is not meant to be perfect and all-covering.
+
+Goal: Help register verified sender emails (`SesManager`) and subscribing to a topic and it's bounce and complaint messages (`SnsNotificationService`)
+
+Manual setups
+
+ 1. AWS account
+ 2. Create an SNS Topic
+ 3. Create a subscription to the SNS Topic, using http `http://yourdomain.com/aws_ses_sns_engine/sns/sns_endpoint` (or set another if you remember to set a route alias)
+ 4. Implement the handler of bounce and complaint notifications (see below)
+
+This enginge helps you register the SES emails to post messages on the Topics.
+
+

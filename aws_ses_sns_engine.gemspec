@@ -5,7 +5,7 @@ require "aws_ses_sns_engine/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "aws_ses_sns_engine"
+  s.name        = "aws-ses-sns-engine"
   s.version     = AwsSesSnsEngine::VERSION
   s.authors     = ["Ole Morten Amundsen"]
   s.email       = ["ole@paladinsoftware.com"]
@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails"
   s.add_dependency "fog"
-  s.add_dependency "aws-ses"
   s.add_dependency "hashie"
+
 
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "sqlite3"
