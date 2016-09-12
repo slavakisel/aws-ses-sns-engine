@@ -18,13 +18,14 @@ This enginge helps you register the SES emails to post messages on the Topics.
 
 ## Getting Started
 
-1. Add to your Gemfile
+Add to your Gemfile
 
     group :production do
       gem 'aws-ses-sns-engine', github: 'paladinsoftware/aws-ses-sns-engine', branch: :master, require: "aws_ses_sns_engine"
     end
 
-2. Initializer
+Initializer
+
 for local testing, put the gem outside the production group and override initializer, here's an example assuming you did
 
     # file config/initializers/amazon_ses.rb
@@ -43,7 +44,7 @@ for local testing, put the gem outside the production group and override initial
       )
     end
 
-3. Test Manually
+Test Manually
 
     $ rails console
     $ AwsSesSnsEngine::SesManager.list_verified_senders
