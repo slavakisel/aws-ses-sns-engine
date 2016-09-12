@@ -14,7 +14,7 @@ module AwsSesSnsEngine
     end
 
     def self.ses_endpoint
-      if Rails.env.production? || @enable_for_development
+      if Rails.env.production? || ( @enable_for_development && Rails.env.test? )
         AWS::SES::Base.new(@settings)
       else
         Dummy.new

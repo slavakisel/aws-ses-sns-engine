@@ -13,4 +13,4 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'aws-ses', github: 'paladinsoftware/aws-ses', branch: 'feature/sns-notifications', require: 'aws/ses'
+gem 'aws-ses', github: 'paladinsoftware/aws-ses', branch: 'feature/sns-notifications'
