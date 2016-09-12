@@ -1,5 +1,27 @@
 module AwsSesSnsEngine
   class SnsNotificationService
+
+    def self.configure opts
+      @sns_handler_class = opts[:sns_handler_class] || raise("sns_handler_class cannot be blank")
+      @aws_ses_sns_topic = opts[:ses_sns_topic]
+    end
+
+    def self.sns_notification_handler
+      klass = @sns_handler_class.constantize
+      unless klass.respond_to? :inbound
+        raise "AwsSesSnsEngine expected an sns handler klass to be defined and implementing method 'inbound'. Create class #{default_sns_notification_handler_name} or configure #{self.class} :sns_handler with custom class name"
+      end
+      klass
+    end
+
+    def self.default_sns_notification_handler_name
+      'SnsNotificationHandler'
+    end
+
+    def self.sns_topic
+      @aws_ses_sns_topic
+    end
+
     def self.ses
       @ses ||= ses_endpoint
     end
@@ -19,14 +41,14 @@ module AwsSesSnsEngine
     end
 
     def self.notification notification_hash
-      SesManager.sns_notification_handler.log_context notification_hash
+      sns_notification_handler.log_context notification_hash
       notification = Hashie::Mash.new notification_hash
       case notification.Type
       when "SubscriptionConfirmation"
         SnsSubscriptionConfirmation.confirm(notification.TopicArn, notification.Token)
       when "Notification"
         message = Hashie::Mash.new(JSON.parse(notification.Message))
-        SesManager.sns_notification_handler.inbound(message)
+        sns_notification_handler.inbound(message)
       else
         raise SnsNotificationError.new("Unknown notification type #{notification.Type}")
       end

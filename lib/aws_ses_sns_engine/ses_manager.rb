@@ -2,26 +2,11 @@ module AwsSesSnsEngine
   class SesManager
 
     def self.configure opts
+      #puts "configuring", opts
       @settings = opts.slice(:access_key_id, :secret_access_key)
-      @aws_ses_sns_topic = opts[:ses_sns_topic]
-      @sns_handler_class = opts[:sns_handler_class] || raise("sns_handler_class cannot be blank")
+      @enable_for_development = opts[:enable_for_development]
+      SnsNotificationService.configure opts.slice(:ses_sns_topic, :sns_handler_class)
       @configured = true
-    end
-
-    def self.sns_topic
-      @aws_ses_sns_topic
-    end
-
-    def self.sns_notification_handler
-      klass = @sns_handler_class.constantize
-      unless klass.respond_to? :inbound
-        raise "AwsSesSnsEngine expected an sns handler klass to be defined and implementing method 'inbound'. Create class #{default_sns_notification_handler_name} or configure #{self.class} :sns_handler with custom class name"
-      end
-      klass
-    end
-
-    def self.default_sns_notification_handler_name
-      'SnsNotificationHandler'
     end
 
     def self.ses
@@ -29,7 +14,7 @@ module AwsSesSnsEngine
     end
 
     def self.ses_endpoint
-      if Rails.env.production?
+      if Rails.env.production? || @enable_for_development
         AWS::SES::Base.new(@settings)
       else
         Dummy.new

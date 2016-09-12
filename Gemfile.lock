@@ -12,7 +12,8 @@ GIT
 PATH
   remote: .
   specs:
-    aws-ses-sns-engine (0.1.0)
+    aws-ses-sns-engine (0.1.1)
+      aws-ses
       fog
       hashie
       rails
