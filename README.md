@@ -24,7 +24,7 @@ Add to your Gemfile
       gem 'aws-ses-sns-engine', github: 'paladinsoftware/aws-ses-sns-engine', branch: :master, require: "aws_ses_sns_engine"
     end
 
-Initializer
+### Initializer
 
 for local testing, put the gem outside the production group and override initializer, here's an example assuming you did
 
@@ -44,7 +44,7 @@ for local testing, put the gem outside the production group and override initial
       )
     end
 
-Test Manually
+### Test Manually
 
     $ rails console
     $ AwsSesSnsEngine::SesManager.list_verified_senders
