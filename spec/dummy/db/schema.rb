@@ -12,5 +12,11 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 0) do
-
+  create_table "sender_emails", force: :cascade do |t|
+    t.string   "email",                                    null: false
+    t.string   "state",                default: "initial", null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.boolean  "default_sender_email", default: false,     null: false
+  end
 end
