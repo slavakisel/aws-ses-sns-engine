@@ -12,7 +12,7 @@ describe SenderEmail do
       sender_email = SenderEmail.new(email: email)
       expect(sender_email).to be_initial
       expect(AwsSesSnsEngine::SesManager).to receive(:verify_new_sender).with(email)
-      sender_email.send_for_verification_request!
+      sender_email.ses_verification_email!
       expect(sender_email).to be_pending
     end
 
@@ -51,7 +51,7 @@ describe SenderEmail do
     it "send or resend verification" do
       expect(AwsSesSnsEngine::SesManager).to receive(:verify_new_sender).with(subject.email).twice
       subject.resend_verification!
-      subject.send_for_verification_request!
+      subject.ses_verification_email!
     end
   end
 end
