@@ -3,7 +3,7 @@ module AwsSesSnsEngine
     extend ActiveSupport::Concern
 
     included do
-      before_create :send_for_verification_request, if: -> { state == 'initial' && !skip_send_for_verification }
+      before_create :ses_verification_email, if: -> { state == 'initial' && !skip_ses_verification_email }
       before_destroy :unregister_email
       scope :default_senders, -> { where(default_sender_email: true) }
       attr_accessor :skip_send_for_verification
@@ -18,16 +18,16 @@ module AwsSesSnsEngine
       end
 
       def resend_verification!
-        send_for_verification_request!
+        ses_verification_email!
       end
 
-      def send_for_verification_request
+      def ses_verification_email
         AwsSesSnsEngine::SesManager.verify_new_sender email
         self.state = 'pending'
       end
 
-      def send_for_verification_request!
-        send_for_verification_request
+      def ses_verification_email!
+        ses_verification_email
         save!
       end
 
