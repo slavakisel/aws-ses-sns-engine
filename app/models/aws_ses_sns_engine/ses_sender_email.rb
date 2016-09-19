@@ -6,7 +6,7 @@ module AwsSesSnsEngine
       before_create :ses_verification_email, if: -> { state == 'initial' && !skip_ses_verification_email }
       before_destroy :unregister_email
       scope :default_senders, -> { where(default_sender_email: true) }
-      attr_accessor :skip_send_for_verification
+      attr_accessor :skip_ses_verification_email
 
       def verified!
         subscribe_to_notifications
