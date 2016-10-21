@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/paladinsoftware/aws-ses.git
-  revision: 0f4db3ec7ac4e17fdbf9771f73079dbb22d185f5
-  branch: feature/sns-notifications
+  revision: 37103d83d0851d893b7b9b48a266f14b2534ec59
+  branch: master
   specs:
-    aws-ses (0.6.0)
+    aws-ses (0.7.0)
       builder
       mail (> 2.2.5)
       mime-types
