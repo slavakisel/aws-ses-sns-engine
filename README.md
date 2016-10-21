@@ -22,6 +22,7 @@ Add to your Gemfile
 
 ```ruby
 group :production do
+  gem 'aws-ses', github: 'paladinsoftware/aws-ses', branch: 'master' # load dependency
   gem 'aws-ses-sns-engine', github: 'paladinsoftware/aws-ses-sns-engine', branch: :master, require: "aws_ses_sns_engine"
 end
 ```
@@ -70,10 +71,10 @@ $ AwsSesSnsEngine::SesManager.verify_new_sender email
 
 # Check verification status
 $ AwsSesSnsEngine::SesManager.verified_sender? email
-      
+
 # Delete
 $ AwsSesSnsEngine::SesManager.delete_verified_sender email
-      
+
 ```
 Check out the SesManager source code and SnsNotificationService for usages.
 
@@ -103,10 +104,10 @@ $ ses_sender_email.ses_verification_email!
 # resend SES verification email and save
 $ ses_sender_email.resend_verification!
 
-# Check the verification status in AWS SES 
+# Check the verification status in AWS SES
 $ ses_sender_email.check_verification_status!
- 
-# Mark Ses Sender Email as default 
+
+# Mark Ses Sender Email as default
 $ ses_sender_email.set_default_sender_email do
     #your custom code related to the instance being marked as default
   end
@@ -114,7 +115,7 @@ $ ses_sender_email.set_default_sender_email do
 # Model states, no AWS calls
 $ ses_sender_email.initial? #uncommon state, means no ses verification email has been sent
 $ ses_sender_email.pending?
-$ ses_sender_email.verified?  
+$ ses_sender_email.verified?
 
 ```
 
@@ -150,14 +151,14 @@ end
 
 ### Controller
 
-example of controller. Ommitting auth and other things you'd normally need: 
+example of controller. Ommitting auth and other things you'd normally need:
 
 ```ruby
 class SesSenderEmailsController < ApplicationController
   respond_to :json
   before_action :get_record, only: [:set_default_sender_email, :check_verification, :resend_verification, :destroy]
   attr_reader :sender_email
-  
+
   def index
     sender_emails = SenderEmail.order(state: 'desc', default_sender_email: 'desc')
     respond_to do |format|
@@ -165,27 +166,27 @@ class SesSenderEmailsController < ApplicationController
       format.json { render json: sender_emails.to_json }
     end
   end
-  
+
   def create
     sender_email = SenderEmail.create!(permitted_params)
     render json: sender_email.to_json
   end
-  
+
   def resend_verification
     sender_email.resend_verification!
     render json: sender_email.to_json
   end
-  
+
   def set_default_sender_email
     sender_email.set_as_default!
     render json: sender_email.to_json
   end
-  
+
   def check_verification
     sender_email.check_verification_status!
     render json: sender_email.to_json
   end
-  
+
   def destroy
     if sender_email.default_sender_email?
       raise "Cannot delete the default sender email. A new must be made default first"
@@ -194,13 +195,13 @@ class SesSenderEmailsController < ApplicationController
     end
     render json: sender_email.to_json
   end
-  
+
   private
-  
+
   def get_record
     @sender_email = current_company.sender_emails.find(params[:id])
   end
-  
+
   def permitted_params
     params.require(:sender_email).permit(:email)
   end
