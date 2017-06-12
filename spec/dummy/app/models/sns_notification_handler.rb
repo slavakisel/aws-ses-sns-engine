@@ -1,4 +1,3 @@
-
 class SnsNotificationHandler
   def self.inbound message
     if message.notificationType == 'Bounce'
@@ -12,12 +11,9 @@ class SnsNotificationHandler
       []
     end
     raise "Method not overridden"
-
-
   end
 
   def self.log_context notification_hash
     #ie. Honeybadger.context notification_hash
   end
 end
-

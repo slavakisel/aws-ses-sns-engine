@@ -1,5 +1,5 @@
 module AwsSesSnsEngine
-  class SnsNotificationError < Exception
+  class SnsNotificationError < StandardError
 
   end
 end
