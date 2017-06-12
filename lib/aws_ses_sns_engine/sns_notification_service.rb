@@ -30,7 +30,7 @@ module AwsSesSnsEngine
       if Rails.env.production?
         SesManager.ses
       elsif Rails.env.test?
-        raise "always mock out the ses_endpoint in specs"
+        raise "always stub the ses_endpoint in specs"
       else
         Dummy.new
       end
@@ -40,17 +40,24 @@ module AwsSesSnsEngine
       sns_topic
     end
 
-    def self.notification notification_hash
+    def self.sns_message notification_hash
       sns_notification_handler.log_context notification_hash
-      notification = Hashie::Mash.new notification_hash
-      case notification.Type
+      message = Hashie::Mash.new notification_hash
+      case message.Type
       when "SubscriptionConfirmation"
-        SnsSubscriptionConfirmation.confirm(notification.TopicArn, notification.Token)
+        SnsSubscriptionConfirmation.confirm(message.TopicArn, message.Token)
       when "Notification"
-        message = Hashie::Mash.new(JSON.parse(notification.Message))
-        sns_notification_handler.inbound(message)
+        notification(message.Message)
       else
         raise SnsNotificationError.new("Unknown notification type #{notification.Type}")
+      end
+    end
+
+    def self.notification message
+      if message.try(:notificationType) == 'AmazonSnsSubscriptionSucceeded'
+        sns_notification_handler.try(:sns_subscription_succeeded, message.message)
+      else
+        sns_notification_handler.inbound(Hashie::Mash.new(JSON.parse(message)))
       end
     end
 
