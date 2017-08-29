@@ -36,24 +36,24 @@ describe AwsSesSnsEngine::SnsController, type: :controller do
 
   describe "Aws SNS Subscription Succeeded" do
     let(:subscription_successful_raw_json) do
+
       '{
         "Type" : "Notification",
-        "MessageId" : "33f38906-1c80-5653-a91f-d8ad2032d88b",
+        "MessageId" : "123456789-1-2-3-4-8ad2032d88b",
         "TopicArn" : "arn:aws:sns:us-east-1:123456789012:MyTopic",
-        "Message" : {
-          "notificationType" : "AmazonSnsSubscriptionSucceeded",
-          "message": "You have successfully subscribed your Amazon SNS topic ___arn_topic_here__ to receive \'Bounce\' notifications from Amazon SES for identity \'support@example.com\'."
-        },
-        "SignatureVersion" : "1",
-        "Signature" :  "ZRRZyvE2nvEkXMuPAyRr2qcFFTlhKQA7hG+a9074exMmjMBGcQOdCUGaMi/wMDA36qGnCYDkoOHmv2U5zsIM65Y+u8JIqvISexELh0Js4C2ScITs2UxP1llpOGxJEwiqqDP4sIluxlSMovKNdCwiTMPNORhhH9BURvfUSYTHnqXbmFB8ITXZmrjLUl9ErLxqkPqBob2hdpTachSYRlZjyfLoE7qtgoJXvx3btQ2069umgiXLGS+6nrbfP7Dcdllt6cO11wK6fqsb8KmWcW9XCWhn+Iutb5v23rtmj/bMfmcEC+99zs/8GyRVx5+eCmgNdZjO4RzexkKtn4guvZjLyA==",
-        "SigningCertURL" : "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-b95095beb82e8f6a046b3aafc7f4149a.pem",
-        "UnsubscribeURL" : "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:649690317627:paladin_email_bounces:b32e1f43-b0f2-4c6d-a655-8d397e9c956f"
+        "Message" : "{\"notificationType\":\"AmazonSnsSubscriptionSucceeded\",\"message\":\"You have successfully subscribed your Amazon SNS topic \'arn:aws:sns:us-east-1:123456789:paladin_email_bounces\' to receive \'Complaint\' notifications from Amazon SES for identity \'info@example.com\'.\"}\n"
       }'
     end
 
+    module SnsSubscriptionSuccess
+      def sns_subscription_succeeded(*args); end
+    end
     it "successful AWS SNS Subscription" do
       @request.env['RAW_POST_DATA'] = subscription_successful_raw_json
+      SnsNotificationHandler.extend(SnsSubscriptionSuccess)
       expect(SnsNotificationHandler).not_to receive(:inbound)
+      expect(SnsNotificationHandler).to receive(:sns_subscription_succeeded)
+
       post :sns_endpoint, {}
     end
   end

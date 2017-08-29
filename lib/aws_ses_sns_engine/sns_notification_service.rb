@@ -53,11 +53,12 @@ module AwsSesSnsEngine
       end
     end
 
-    def self.notification message
-      if message.try(:notificationType) == 'AmazonSnsSubscriptionSucceeded'
+    def self.notification raw_message
+      message = Hashie::Mash.new(JSON.parse(raw_message))
+      if message.notificationType == 'AmazonSnsSubscriptionSucceeded'
         sns_notification_handler.try(:sns_subscription_succeeded, message.message)
       else
-        sns_notification_handler.inbound(Hashie::Mash.new(JSON.parse(message)))
+        sns_notification_handler.inbound(message)
       end
     end
 

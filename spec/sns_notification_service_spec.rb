@@ -14,10 +14,7 @@ describe AwsSesSnsEngine::SnsNotificationService do
     let(:subscription_success) do
       {
         "Type" => "Notification",
-        "Message" => {
-          "notificationType" => "AmazonSnsSubscriptionSucceeded",
-          "message" => "You have successfully subscribed your Amazon SNS topic ___arn_topic_here__ to receive 'Bounce' notifications from Amazon SES for identity 'support@example.com'."
-        }
+        "Message" => "{\"notificationType\":\"AmazonSnsSubscriptionSucceeded\",\"message\":\"some message\"}\n"
       }
     end
 
