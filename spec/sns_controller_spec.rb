@@ -16,8 +16,7 @@ describe AwsSesSnsEngine::SnsController, type: :controller do
     it "dispatches subscription confirmation" do
       h = JSON.parse(confirmation_raw_json)
       expect(AwsSesSnsEngine::SnsSubscriptionConfirmation).to receive(:confirm).with(h['TopicArn'], h['Token'])
-      @request.env['RAW_POST_DATA'] = confirmation_raw_json
-      post :sns_endpoint, {}
+      post :sns_endpoint, { body: confirmation_raw_json }
     end
   end
 
@@ -28,9 +27,8 @@ describe AwsSesSnsEngine::SnsController, type: :controller do
     end
 
     it "dispatches notification" do
-      @request.env['RAW_POST_DATA'] = notification_raw_json
       expect(SnsNotificationHandler).to receive(:inbound).with({"uuid"=>"12341234uu", "status"=>"Processing"})
-      post :sns_endpoint, {}
+      post :sns_endpoint, { body: notification_raw_json }
     end
   end
 
@@ -49,12 +47,11 @@ describe AwsSesSnsEngine::SnsController, type: :controller do
       def sns_subscription_succeeded(*args); end
     end
     it "successful AWS SNS Subscription" do
-      @request.env['RAW_POST_DATA'] = subscription_successful_raw_json
       SnsNotificationHandler.extend(SnsSubscriptionSuccess)
       expect(SnsNotificationHandler).not_to receive(:inbound)
       expect(SnsNotificationHandler).to receive(:sns_subscription_succeeded)
 
-      post :sns_endpoint, {}
+      post :sns_endpoint, { body: subscription_successful_raw_json }
     end
   end
 end

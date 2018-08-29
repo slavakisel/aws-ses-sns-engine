@@ -14,3 +14,10 @@ gemspec
 # gem 'byebug', group: [:development, :test]
 
 gem 'aws-ses', github: 'paladinsoftware/aws-ses', branch: 'master'
+gem 'nokogiri', '~> 1.8.2'
+gem 'rails-html-sanitizer', '~> 1.0.4'
+gem 'sprockets', '~> 3.7.2'
+
+group :development, :test do
+  gem 'byebug'
+end
