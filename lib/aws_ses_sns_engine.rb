@@ -5,6 +5,7 @@ require "aws_ses_sns_engine/sns_notification_service"
 require "aws_ses_sns_engine/sns_subscription_confirmation"
 require 'hashie'
 require 'aws/ses'
+require_relative '../app/models/aws_ses_sns_engine/ses_sender_email.rb'
 
 module AwsSesSnsEngine
 end
