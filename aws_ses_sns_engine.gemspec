@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "rails"
-  s.add_dependency "fog"
+  s.add_dependency "fog-aws"
   s.add_dependency "hashie"
   s.add_dependency "aws-ses"
 
