@@ -1,0 +1,28 @@
+version: v1.0
+name: AWS SES SNS Engine CI pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: Run specs
+    task:
+      env_vars:
+        - name: RAILS_ENV
+          value: "test"
+
+      jobs:
+        - name: Run RSpec
+          commands:
+            - checkout
+            - sem-version ruby 2.5.3
+            - gem uninstall bundler -aI
+            - gem install bundler -v 2.0.1 -N
+            - cache restore gems-$SEMAPHORE_GIT_BRANCH,gems-master
+            - bundle install --path vendor/bundle
+            - if ! cache has_key gemfile-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock); then cache delete gems-$SEMAPHORE_GIT_BRANCH; fi;
+            - cache store gems-$SEMAPHORE_GIT_BRANCH vendor/bundle
+            - cache store gemfile-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) Gemfile.lock
+            - RAILS_ENV=test bundle exec rspec
+            #- RAILS_ENV=test bundle exec rubocop -R
