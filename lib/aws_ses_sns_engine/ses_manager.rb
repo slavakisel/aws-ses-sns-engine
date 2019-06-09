@@ -9,6 +9,10 @@ module AwsSesSnsEngine
       @configured = true
     end
 
+    def self.settings
+      @settings
+    end
+
     def self.ses
       @ses ||= ses_endpoint
     end
