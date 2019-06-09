@@ -29,9 +29,31 @@ end
 
 ### Initializer
 
-for local testing, put the gem outside the production group and override initializer, here's an example assuming you did
+for local testing, put the gem outside the production group and override initializer, here's an example assuming you did implement SnsNotificationHandler.
 
 ```ruby
+# file app/services/sns_notification_handler.rb
+class SnsNotificationHandler
+  def self.inbound message
+    case message.notificationType
+    when 'Bounce'
+      emails = message.bounce.bouncedRecipients.map {|bounce| bounce.emailAddress}
+      # do something with the emails
+    when 'Complaint'
+      emails = message.complaint.complainedRecipients.map {|complaint| complaint.emailAddress}
+      # do something with the emails
+    else
+      # raise error or handle
+      []
+    end
+    raise "Method not overridden"
+  end
+
+  def self.log_context notification_hash
+    # do something with notification hash
+  end
+end
+
 # file config/initializers/amazon_ses.rb
 
 if defined? AWS::SES::Base
@@ -42,7 +64,7 @@ if defined? AWS::SES::Base
   AwsSesSnsEngine::SesManager.configure(
     ActionMailer::Base.ses_settings.merge(
       ses_sns_topic: ENV['AWS_SES_SNS_TOPIC_SUBSCRIPTION'],
-      sns_handler_class: 'Aws::SnsNotificationHandler',
+      sns_handler_class: 'SnsNotificationHandler',
       enable_for_development: true
     )
   )
